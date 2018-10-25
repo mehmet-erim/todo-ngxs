@@ -1,0 +1,24 @@
+.container {
+  margin: 0 auto;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10%);
+
+  li {
+    margin-top: 10px;
+  }
+
+  li:first-child {
+    margin-top: 0;
+  }
+}
+
+.input {
+  min-height: 100px;
+  text-align: center;
+
+  input {
+    margin-top: 10px;
+  }
+}
