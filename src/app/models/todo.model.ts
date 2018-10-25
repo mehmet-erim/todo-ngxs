@@ -3,3 +3,8 @@ export interface Todo {
   id: string;
   checked: boolean;
 }
+
+export interface TodoCheckModel {
+  id: string;
+  checked: boolean;
+}

@@ -1,6 +1,6 @@
 import { Todo } from '../models/todo.model';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { AddTodo, RemoveTodo } from '../actions/todo.action';
+import { AddTodo, RemoveTodo, CheckTodo } from '../actions/todo.action';
 import { UUID } from 'angular2-uuid';
 
 export class TodoStateModel {
@@ -13,7 +13,7 @@ export class TodoStateModel {
     todos: [{
       name: 'My Initial Todo',
       id: UUID.UUID(),
-      checked: false
+      checked: true
     }]
   }
 })
@@ -52,5 +52,31 @@ export class TodoState {
     patchState({
       todos: getState().todos.filter(s => s.id !== payload)
     });
+  }
+
+  @Action(CheckTodo)
+  check({ getState, patchState }: StateContext<TodoStateModel>, { payload }: CheckTodo) {
+    const state = getState();
+
+    const data = state.todos.find(s => s.id === payload.id);
+
+    if (data.checked !== payload.checked) {
+      const index = state.todos.findIndex(s => s.id === payload.id);
+
+      const model: Todo = {
+        name: data.name,
+        checked: payload.checked,
+        id: data.id
+      };
+
+      patchState({
+        todos: [
+          ...state.todos.slice(0, index),
+          model,
+          ...state.todos.slice(index + 1),
+        ]
+      });
+    }
+
   }
 }

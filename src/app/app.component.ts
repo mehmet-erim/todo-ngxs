@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Todo } from './models/todo.model';
+import { Todo, TodoCheckModel } from './models/todo.model';
 import { Store, Select } from '@ngxs/store';
-import { AddTodo, RemoveTodo } from './actions/todo.action';
+import { AddTodo, RemoveTodo, CheckTodo } from './actions/todo.action';
 import { TodoStateModel, TodoState } from './states/todo.state';
 
 @Component({
@@ -37,5 +37,14 @@ export class AppComponent {
 
   removeTodo(id) {
     this.store.dispatch(new RemoveTodo(id));
+  }
+
+  onChangeTodoCheck(event: boolean, id: string) {
+    const model: TodoCheckModel = {
+      checked: event,
+      id: id,
+    };
+
+    this.store.dispatch(new CheckTodo(model));
   }
 }
