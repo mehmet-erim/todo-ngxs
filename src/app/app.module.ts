@@ -7,10 +7,12 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { TodoState } from './states/todo.state';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
+import { DecoratorTutorialComponent } from './decorator-tutorial/decorator-tutorial.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DecoratorTutorialComponent
   ],
   imports: [
     BrowserModule,
