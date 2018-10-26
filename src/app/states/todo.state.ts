@@ -1,7 +1,10 @@
 import { Todo } from '../models/todo.model';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { AddTodo, RemoveTodo, CheckTodo, SubmitTodoForm } from '../actions/todo.action';
+import { AddTodo, RemoveTodo, CheckTodo, SubmitTodoForm, GetMockData } from '../actions/todo.action';
 import { UUID } from 'angular2-uuid';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 export class TodoStateModel {
   todos: Todo[];
@@ -26,7 +29,8 @@ export class TodoStateModel {
 })
 
 export class TodoState {
-  constructor() { }
+  constructor(private http: HttpClient) { }
+
   @Selector()
   static getTodos(state: TodoStateModel) {
     return state.todos;
@@ -106,5 +110,30 @@ export class TodoState {
     patchState({
       todos: [...state.todos, model]
     });
+  }
+
+  @Action(GetMockData)
+  getMockData({ getState, patchState }: StateContext<TodoStateModel>) {
+    let header: HttpHeaders = new HttpHeaders();
+    header = header.append('Accept', 'application/json');
+
+    this.http.get('https://jsonplaceholder.typicode.com/todos', { headers: header }).pipe(tap((res: any[]) => {
+      const random = Math.round(Math.random() * (res.length - 10));
+      const state = getState();
+
+      const todos = [];
+      for (let i = random; i < random + 10; i++) {
+        const el = res[i];
+        const model: Todo = {
+          name: el.title,
+          id: el.id,
+          checked: el.completed
+        };
+        todos.push(model);
+      }
+      patchState({
+        todos: [...state.todos, ...todos]
+      });
+    })).subscribe();
   }
 }

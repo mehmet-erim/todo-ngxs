@@ -21,3 +21,6 @@ export class CheckTodo {
 export class SubmitTodoForm {
   static readonly type = '[TODO] Submit Form';
 }
+export class GetMockData {
+  static readonly type = '[TODO] Get Mock Data';
+}

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { Todo, TodoCheckModel } from './models/todo.model';
 import { Store, Select } from '@ngxs/store';
-import { AddTodo, RemoveTodo, CheckTodo, SubmitTodoForm } from './actions/todo.action';
+import { AddTodo, RemoveTodo, CheckTodo, SubmitTodoForm, GetMockData } from './actions/todo.action';
 import { TodoState } from './states/todo.state';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -62,9 +62,15 @@ export class AppComponent implements OnDestroy, OnInit {
 
   onSubmit() {
     if (this.isTodoFormValid) {
-      this.store.dispatch(new SubmitTodoForm());
-      this.todoForm.reset();
+      this.store.dispatch(new SubmitTodoForm()).subscribe((res) => {
+        console.log(res);
+        this.todoForm.reset();
+      });
     }
+  }
+
+  getMock() {
+    this.store.dispatch(new GetMockData());
   }
 
   ngOnDestroy() {

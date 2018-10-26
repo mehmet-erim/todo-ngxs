@@ -8,6 +8,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { TodoState } from './states/todo.state';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { DecoratorTutorialComponent } from './decorator-tutorial/decorator-tutorial.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { DecoratorTutorialComponent } from './decorator-tutorial/decorator-tutor
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     NgxsModule.forRoot([TodoState]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot(),
