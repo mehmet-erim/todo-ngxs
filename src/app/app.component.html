@@ -1,30 +1,64 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<h2 style="text-align: center;">Your Todos</h2>
+<h2 class="col-c mt-3">Your Todos</h2>
 
 <div class="container">
   <div class="row">
-    <div style="margin: 0 auto;"
-         class="col-sm-6">
-      <div class="col-sm-12 input">
-        <input type="text"
-               [(ngModel)]="todo"
-               (keyup.enter)="addTodo()">
-        <button class="btn btn-primary ml-1"
-                type="button"
-                (click)="addTodo()">Add</button>
+    <div class="col-sm-6">
+      <div class="col-sm-12 card">
+        <h2 class="col-c mt-3">Normal</h2>
+        <div class="col-sm-12 input">
+          <input type="text"
+                 [(ngModel)]="todo"
+                 (keyup.enter)="addTodo()">
+          <button class="btn btn-primary ml-1"
+                  type="button"
+                  (click)="addTodo()">Add</button>
+        </div>
+        <div class="list">
+          <ul>
+            <li *ngFor="let todo of todos$ | async">
+              <input type="checkbox"
+                     class="mr-1"
+                     [(ngModel)]="todo.checked"
+                     (ngModelChange)="onChangeTodoCheck($event, todo.id)">
+              <span [ngClass]="{'checked' : todo.checked}">{{todo.name}}</span>
+              <button class="btn btn-sm btn-danger ml-1"
+                      (click)="removeTodo(todo.id)">Remove</button>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="list">
-        <ul>
-          <li *ngFor="let todo of todos$ | async">
-            <input type="checkbox"
-                   class="mr-1"
-                   [(ngModel)]="todo.checked"
-                   (ngModelChange)="onChangeTodoCheck($event, todo.id)">
-            <span [ngClass]="{'checked' : todo.checked}">{{todo.name}}</span>
-            <button class="btn btn-sm btn-danger ml-1"
-                    (click)="removeTodo(todo.id)">Remove</button>
-          </li>
-        </ul>
+    </div>
+    <div class="col-sm-6">
+      <div class="col-sm-12 card">
+        <h2 class="col-c mt-3">Reactive Form</h2>
+        <div class="col-sm-12 input">
+          <form [formGroup]="todoForm"
+                novalidate
+                ngxsForm="todos.todoForm"
+                ngxsFormClearOnDestroy="true"
+                (ngSubmit)="onSubmit()">
+            <input type="text"
+                   formControlName="name"
+                   (keyup.enter)="onSubmit()">
+            <button class="btn btn-primary ml-1"
+                    type="submit"
+                    [disabled]="!isTodoFormValid">Add</button>
+          </form>
+        </div>
+        <div class="list">
+          <ul>
+            <li *ngFor="let todo of todos$ | async">
+              <input type="checkbox"
+                     class="mr-1"
+                     [(ngModel)]="todo.checked"
+                     (ngModelChange)="onChangeTodoCheck($event, todo.id)">
+              <span [ngClass]="{'checked' : todo.checked}">{{todo.name}}</span>
+              <button class="btn btn-sm btn-danger ml-1"
+                      (click)="removeTodo(todo.id)">Remove</button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

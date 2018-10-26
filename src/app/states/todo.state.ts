@@ -1,10 +1,11 @@
 import { Todo } from '../models/todo.model';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { AddTodo, RemoveTodo, CheckTodo } from '../actions/todo.action';
+import { AddTodo, RemoveTodo, CheckTodo, SubmitTodoForm } from '../actions/todo.action';
 import { UUID } from 'angular2-uuid';
 
 export class TodoStateModel {
   todos: Todo[];
+  todoForm: any;
 }
 
 @State<TodoStateModel>({
@@ -14,7 +15,13 @@ export class TodoStateModel {
       name: 'My Initial Todo',
       id: UUID.UUID(),
       checked: true
-    }]
+    }],
+    todoForm: {
+      model: undefined,
+      dirty: false,
+      status: '',
+      errors: {}
+    }
   }
 })
 
@@ -78,5 +85,26 @@ export class TodoState {
       });
     }
 
+  }
+
+  @Action(SubmitTodoForm)
+  submitForm({ getState, patchState }) {
+    const state = getState();
+    let model = state.todoForm.model;
+
+    const index = state.todos.findIndex(s => s.name.toLocaleLowerCase() === model.name.toLocaleLowerCase());
+
+    if (index > -1) {
+      return;
+    }
+
+    model = {
+      ...model,
+      id: UUID.UUID()
+    };
+
+    patchState({
+      todos: [...state.todos, model]
+    });
   }
 }

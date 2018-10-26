@@ -17,3 +17,7 @@ export class CheckTodo {
 
   constructor(public payload: TodoCheckModel) { }
 }
+
+export class SubmitTodoForm {
+  static readonly type = '[TODO] Submit Form';
+}
