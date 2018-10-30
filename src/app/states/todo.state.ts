@@ -4,7 +4,6 @@ import { AddTodo, RemoveTodo, CheckTodo, SubmitTodoForm, GetMockData } from '../
 import { UUID } from 'angular2-uuid';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 export class TodoStateModel {
   todos: Todo[];
@@ -36,9 +35,15 @@ export class TodoState {
     return state.todos;
   }
 
-  @Selector()
-  static getCompletedTodos(state: TodoStateModel) {
-    return state.todos.filter(s => s.completed === true);
+  // @Selector()
+  // static getCompletedTodos(state: TodoStateModel) {
+  //   return state.todos.filter(s => s.completed === true);
+  // }
+
+  static getCompletedTodos(status: boolean) {
+    return createSelector([TodoState], (state: TodoStateModel) => {
+      return state.todos.filter(s => s.completed === status);
+    });
   }
 
   @Action(AddTodo)
@@ -79,18 +84,18 @@ export class TodoState {
     if (data.completed !== payload.completed) {
       const index = state.todos.findIndex(s => s.id === payload.id);
 
-      const model: Todo = {
-        name: data.name,
-        completed: payload.completed,
-        id: data.id
-      };
+      const todos = [
+        ...state.todos.slice(0, index),
+        {
+          name: data.name,
+          completed: payload.completed,
+          id: data.id
+        },
+        ...state.todos.slice(index + 1),
+      ];
 
       patchState({
-        todos: [
-          ...state.todos.slice(0, index),
-          model,
-          ...state.todos.slice(index + 1),
-        ]
+        todos: todos
       });
     }
 

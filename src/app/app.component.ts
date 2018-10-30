@@ -23,17 +23,11 @@ export class AppComponent implements OnDestroy, OnInit {
   @Select(TodoState.getTodos)
   todos$: Observable<Todo[]>;
 
+  @Select(TodoState.getCompletedTodos(true))
   completedTodos$: Observable<Todo[]>;
 
-  completedTodos: Todo[];
-
   constructor(private store: Store, private fb: FormBuilder) {
-    this.completedTodos$ = this.todos$.pipe(map(list => list.filter(s => s.completed)));
-
-    this.todos$.subscribe(todos => {
-      console.warn(todos);
-      this.completedTodos = todos;
-    });
+    this.todos$.subscribe(s => console.warn(s));
   }
 
   ngOnInit() {
