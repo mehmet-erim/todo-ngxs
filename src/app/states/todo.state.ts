@@ -1,5 +1,5 @@
 import { Todo } from '../models/todo.model';
-import { State, Action, StateContext, Selector } from '@ngxs/store';
+import { State, Action, StateContext, Selector, createSelector } from '@ngxs/store';
 import { AddTodo, RemoveTodo, CheckTodo, SubmitTodoForm, GetMockData } from '../actions/todo.action';
 import { UUID } from 'angular2-uuid';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -17,7 +17,7 @@ export class TodoStateModel {
     todos: [{
       name: 'My Initial Todo',
       id: UUID.UUID(),
-      checked: true
+      completed: true
     }],
     todoForm: {
       model: undefined,
@@ -34,6 +34,11 @@ export class TodoState {
   @Selector()
   static getTodos(state: TodoStateModel) {
     return state.todos;
+  }
+
+  @Selector()
+  static getCompletedTodos(state: TodoStateModel) {
+    return state.todos.filter(s => s.completed === true);
   }
 
   @Action(AddTodo)
@@ -71,12 +76,12 @@ export class TodoState {
 
     const data = state.todos.find(s => s.id === payload.id);
 
-    if (data.checked !== payload.checked) {
+    if (data.completed !== payload.completed) {
       const index = state.todos.findIndex(s => s.id === payload.id);
 
       const model: Todo = {
         name: data.name,
-        checked: payload.checked,
+        completed: payload.completed,
         id: data.id
       };
 
@@ -127,7 +132,7 @@ export class TodoState {
         const model: Todo = {
           name: el.title,
           id: el.id,
-          checked: el.completed
+          completed: el.completed
         };
         todos.push(model);
       }

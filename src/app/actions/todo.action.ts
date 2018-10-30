@@ -1,4 +1,4 @@
-import { Todo, TodoCheckModel } from '../models/todo.model';
+import { Todo, TodoStatusModel } from '../models/todo.model';
 
 export class AddTodo {
   static readonly type = '[TODO] Add';
@@ -15,7 +15,7 @@ export class RemoveTodo {
 export class CheckTodo {
   static readonly type = '[TODO] Check';
 
-  constructor(public payload: TodoCheckModel) { }
+  constructor(public payload: TodoStatusModel) { }
 }
 
 export class SubmitTodoForm {

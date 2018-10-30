@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { Todo, TodoCheckModel } from './models/todo.model';
+import { Todo, TodoStatusModel } from './models/todo.model';
 import { Store, Select } from '@ngxs/store';
 import { AddTodo, RemoveTodo, CheckTodo, SubmitTodoForm, GetMockData } from './actions/todo.action';
 import { TodoState } from './states/todo.state';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -17,10 +18,22 @@ export class AppComponent implements OnDestroy, OnInit {
   destroy$ = new Subject<void>();
   todoForm: FormGroup;
 
+  isSelectCompleted = false;
+
   @Select(TodoState.getTodos)
-  todos$: Observable<Todo>;
+  todos$: Observable<Todo[]>;
+
+  completedTodos$: Observable<Todo[]>;
+
+  completedTodos: Todo[];
 
   constructor(private store: Store, private fb: FormBuilder) {
+    this.completedTodos$ = this.todos$.pipe(map(list => list.filter(s => s.completed)));
+
+    this.todos$.subscribe(todos => {
+      console.warn(todos);
+      this.completedTodos = todos;
+    });
   }
 
   ngOnInit() {
@@ -33,7 +46,7 @@ export class AppComponent implements OnDestroy, OnInit {
     if (this.todo) {
       const model: Todo = {
         name: this.todo,
-        checked: false,
+        completed: false,
         id: null
       };
 
@@ -47,9 +60,9 @@ export class AppComponent implements OnDestroy, OnInit {
     this.store.dispatch(new RemoveTodo(id));
   }
 
-  onChangeTodoCheck(event: boolean, id: string) {
-    const model: TodoCheckModel = {
-      checked: event,
+  onChangeTodoStatus(event: boolean, id: string) {
+    const model: TodoStatusModel = {
+      completed: event,
       id: id,
     };
 

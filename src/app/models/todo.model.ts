@@ -1,10 +1,10 @@
 export interface Todo {
   name: string;
   id: string;
-  checked: boolean;
+  completed: boolean;
 }
 
-export interface TodoCheckModel {
+export interface TodoStatusModel {
   id: string;
-  checked: boolean;
+  completed: boolean;
 }
