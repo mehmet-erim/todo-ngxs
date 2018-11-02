@@ -4,6 +4,7 @@ import { AddTodo, RemoveTodo, CheckTodo, SubmitTodoForm, GetMockData } from '../
 import { UUID } from 'angular2-uuid';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
+import { UserService } from '../service/user.service';
 
 export class TodoStateModel {
   todos: Todo[];
@@ -28,7 +29,7 @@ export class TodoStateModel {
 })
 
 export class TodoState {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private u:UserService) { }
 
   @Selector()
   static getTodos(state: TodoStateModel) {
@@ -49,6 +50,31 @@ export class TodoState {
   @Action(AddTodo)
   add({ getState, patchState }: StateContext<TodoStateModel>, { payload }: AddTodo) {
     const state = getState();
+
+    const url = "https://jsonplaceholder.typicode.com/todo";
+
+    this.u.getUsers(url).subscribe(
+        
+       data => {
+         if(data){
+               // 200 and has data
+         } else {
+               // 200 but ddata
+         }
+       },
+       error => {
+           // 
+           console.log(error);
+           console.log(error.message);
+           console.log(error.status); // code
+
+             
+           debugger;
+       }
+     )
+
+
+
 
     const index = state.todos.findIndex(s => s.name.toLocaleLowerCase() === payload.name.toLocaleLowerCase());
 
@@ -131,7 +157,7 @@ export class TodoState {
       const random = Math.round(Math.random() * (res.length - 10));
       const state = getState();
 
-      const todos = [];
+      let todos = [];
       for (let i = random; i < random + 10; i++) {
         const el = res[i];
         const model: Todo = {
@@ -139,7 +165,7 @@ export class TodoState {
           id: el.id,
           completed: el.completed
         };
-        todos.push(model);
+        todos = [...todos, model];
       }
       patchState({
         todos: [...state.todos, ...todos]
