@@ -9,18 +9,21 @@ import { TodoState } from './states/todo.state';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { DecoratorTutorialComponent } from './decorator-tutorial/decorator-tutorial.component';
 import { HttpClientModule } from '@angular/common/http';
+import { NotifyComponent } from './common/notify/notify.component';
+import { NotifyState } from './states/notify.state';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DecoratorTutorialComponent
+    DecoratorTutorialComponent,
+    NotifyComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgxsModule.forRoot([TodoState]),
+    NgxsModule.forRoot([TodoState, NotifyState]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot(),
     NgxsFormPluginModule.forRoot(),
